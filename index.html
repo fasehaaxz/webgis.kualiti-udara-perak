@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platform WebGIS Perbandingan Kualiti Udara di Perak</title>
+    <title>Platform WebGIS Perbandingan Kualiti Udara Sebelum dan Selepas COVID-19 di Negeri Perak</title>
 
     <!-- Leaflet & FontAwesome -->
     <link rel="stylesheet" href="css/leaflet.css">
@@ -23,10 +23,10 @@
         --border: #dcd2d5;
         --shadow: 0 4px 20px -2px rgba(100, 28, 42, 0.08);
 
-        /* Warna Status */
-        --color-baik: #3b82f6;      /* Biru */
-        --color-sederhana: #10b981; /* Hijau */
-        --color-tidak-sihat: #f59e0b; /* Kuning / Warning */
+        /* Warna Status Mengikut Standard APIMS */
+        --color-baik: #3b82f6;        /* Biru - Good */
+        --color-sederhana: #10b981;   /* Hijau - Moderate */
+        --color-tidak-sihat: #eab308; /* Kuning APIMS - Unhealthy */
     }
 
     * { box-sizing: border-box; }
@@ -207,7 +207,7 @@
     .status-badge { padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.60rem; text-align: center; display: inline-block; white-space: nowrap; }
     .status-baik { background-color: #dbeafe; color: #1e40af; }
     .status-sederhana { background-color: #d1fae5; color: #065f46; }
-    .status-tidak-sihat { background-color: #fef3c7; color: #92400e; }
+    .status-tidak-sihat { background-color: #fef08a; color: #854d0e; } /* Kuning APIMS */
     .status-tiada { background-color: #e2e8f0; color: #475569; }
 
     /* MARKER ICON & MAP LABELS */
@@ -277,15 +277,12 @@
     .pdf-info-title { font-weight: 700; margin-bottom: 3px; color: var(--primary); font-size: 0.7rem; border-bottom: 1px solid #cbd5e1; padding-bottom: 2px; }
     .north-arrow { text-align: right; font-size: 1.2rem; color: #000; }
 
-    /* =========================================================
-       MEDIA QUERIES KHAS UNTUK TELEFON & TABLET (MOBILE FRIENDLY)
-       ========================================================= */
+    /* MEDIA QUERIES KHAS UNTUK TELEFON & TABLET */
     @media screen and (max-width: 768px) {
         .header-title h1 { font-size: 0.8rem; }
         .header-logo-img { height: 30px; }
         .header { padding: 6px 10px; }
 
-        /* Panel Sisi Bertindak Sebagai Pop-out Overlay */
         .left-panel {
             position: fixed;
             top: 58px;
@@ -300,7 +297,6 @@
             margin-left: 0;
         }
 
-        /* Grid Peta Menjadi 1 Kolum Sahaja Pada Skrin Sempit */
         .grid-2, .grid-3 {
             grid-template-columns: 1fr !important;
         }
@@ -370,7 +366,7 @@
             </div>
 
             <div class="header-title">
-                <h1 id="txt-title" data-i18n="app_title">Platform WebGIS Perbandingan Kualiti Udara di Perak</h1>
+                <h1 id="txt-title" data-i18n="app_title">Platform WebGIS Perbandingan Kualiti Udara Sebelum dan Selepas COVID-19 di Negeri Perak</h1>
             </div>
 
             <div class="header-controls">
@@ -501,7 +497,7 @@
                             <img src="logo_puo.png" alt="Logo Politeknik Ungku Omar" style="height:100%; width:auto; object-fit:contain;">
                         </div>
                         <div>
-                            <h1 class="pdf-title-main" data-i18n="app_title">Platform WebGIS Perbandingan Kualiti Udara di Perak</h1>
+                            <h1 class="pdf-title-main" data-i18n="app_title">Platform WebGIS Perbandingan Kualiti Udara Sebelum dan Selepas COVID-19 di Negeri Perak</h1>
                             <p class="pdf-title-sub" id="pdf-subtitle-param">Berdasarkan Karbon Monoksida (CO)</p>
                             <p class="pdf-title-sub" id="pdf-subtitle-years" style="font-weight:700;">Tahun 2023</p>
                         </div>
@@ -577,7 +573,7 @@
 
     var kamusBahasa = {
         "ms": {
-            "app_title": "Platform WebGIS Perbandingan Kualiti Udara di Perak",
+            "app_title": "Platform WebGIS Perbandingan Kualiti Udara Sebelum dan Selepas COVID-19 di Negeri Perak",
             "display_settings": "Tetapan Utama",
             "parameter": "Parameter",
             "param_ipu_label": "Indeks Pencemar Udara (IPU)",
@@ -621,7 +617,7 @@
             "based_on": "Berdasarkan "
         },
         "en": {
-            "app_title": "WebGIS Air Quality Comparison Platform in Perak",
+            "app_title": "WebGIS Air Quality Comparison Platform Before and After COVID-19 in Perak",
             "display_settings": "Main Settings",
             "parameter": "Parameter",
             "param_ipu_label": "Air Pollutant Index (API)",
@@ -754,9 +750,10 @@
 
     function dapatkanWarna(val, param) {
         if (val === 'N/A' || val === '-' || val === undefined || val === null) return '#94a3b8';
-        if (param === 'CO') return val < 0.50 ? '#3b82f6' : val <= 0.80 ? '#10b981' : '#f59e0b';
-        if (param === 'NO2') return val < 0.0060 ? '#3b82f6' : val <= 0.0090 ? '#10b981' : '#f59e0b';
-        return val <= 50 ? '#3b82f6' : val <= 100 ? '#10b981' : '#f59e0b';
+        /* Warna Unhealthy / Tidak Sihat ditukar kepada Kuning Terang (#eab308 / APIMS) */
+        if (param === 'CO') return val < 0.50 ? '#3b82f6' : val <= 0.80 ? '#10b981' : '#eab308';
+        if (param === 'NO2') return val < 0.0060 ? '#3b82f6' : val <= 0.0090 ? '#10b981' : '#eab308';
+        return val <= 50 ? '#3b82f6' : val <= 100 ? '#10b981' : '#eab308';
     }
 
     function dapatkanStatusText(val, param) {
@@ -791,6 +788,15 @@
         rekaSemuaPeta();
     }
 
+    /* FUNGSI BUKA SERENTAK POP-UP DI SEMUA PETA */
+    function triggerAllPopups(namaStesen) {
+        if (mapMarkerStores[namaStesen]) {
+            mapMarkerStores[namaStesen].forEach(function(mk) {
+                mk.openPopup();
+            });
+        }
+    }
+
     function fokusLokasiStesen(namaStesen) {
         stesenDipilih = namaStesen;
         if (stesenDipilih === 'ALL') {
@@ -803,10 +809,7 @@
             mapInstances.forEach(m => {
                 m.setView([stData.lat, stData.lng], 11);
             });
-
-            if (mapMarkerStores[namaStesen]) {
-                mapMarkerStores[namaStesen].forEach(mk => mk.openPopup());
-            }
+            triggerAllPopups(namaStesen);
         }
     }
 
@@ -884,7 +887,7 @@
                 var stObj = dapatkanStatusText(valRaw === '-' ? '-' : valRaw, paramSemasa);
                 
                 rowsHtml += `
-                    <tr>
+                    <tr style="cursor:pointer;" onclick="triggerAllPopups('${st.station}')">
                         <td title="${st.station}"><b>${st.station}</b></td>
                         <td><b>${valFormatted}</b></td>
                         <td><span class="status-badge ${stObj.class}">${stObj.text}</span></td>
@@ -980,6 +983,11 @@
 
                 if (!mapMarkerStores[st.station]) mapMarkerStores[st.station] = [];
                 mapMarkerStores[st.station].push(mk);
+
+                // Event listener apabila marker diklik, trigger popup di semua peta serentak
+                mk.on('click', function() {
+                    triggerAllPopups(st.station);
+                });
 
                 var offsetVal = [0, -20];
                 var directionVal = 'top';
