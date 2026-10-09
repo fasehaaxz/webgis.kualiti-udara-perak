@@ -298,7 +298,7 @@
     /* LAYOUT KHAS GRAF TAHUNAN 3 KAD */
     .yearly-param-grid { display: flex; gap: 12px; width: 100%; height: 100%; padding: 8px; }
     .yearly-param-card { flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-    .yearly-card-title { font-size: 0.95rem; font-weight: 800; color: #1e3a8a; margin-bottom: 8px; text-transform: uppercase; }
+    .yearly-card-title { font-size: 0.85rem; font-weight: 800; color: #1e3a8a; margin-bottom: 8px; text-transform: uppercase; text-align: center; }
 
     /* MEDIA QUERIES */
     @media screen and (max-width: 768px) {
@@ -1132,7 +1132,6 @@
                     datasets: [{
                         label: 'Purata',
                         data: [avg18, avg20, avg23],
-                        /* WARNA GRAF TAHUNAN DITUKAR SAMA SEPERTI GAMBAR: 2018(#0F4C81), 2020(#2E7DAD), 2023(#16A34A) */
                         backgroundColor: ['#0F4C81', '#2E7DAD', '#16A34A'],
                         borderRadius: 4,
                         borderWidth: 1
@@ -1178,8 +1177,8 @@
         
         if (pdfMode === 'yearly_chart') {
             document.getElementById('pdf-subtitle-param').innerText = bahasaSemasa === 'ms' 
-                ? `Perbandingan Purata Bacaan mengikut Parameter (NO₂, CO, ${ipuLabelText})` 
-                : `Average Reading Comparison by Parameter (NO₂, CO, ${ipuLabelText})`;
+                ? `Perbandingan Purata Bacaan mengikut Parameter (Nitrogen Dioksida, Karbon Monoksida, ${ipuLabelText})` 
+                : `Average Reading Comparison by Parameter (Nitrogen Dioxide, Carbon Monoxide, ${ipuLabelText})`;
             document.getElementById('pdf-subtitle-years').innerText = (bahasaSemasa === 'ms' ? "Tahun 2018, 2020, 2023" : "Years 2018, 2020, 2023");
             document.getElementById('pdf-info-param-name').innerText = `NO₂, CO, ${ipuLabelText}`;
         } else {
@@ -1341,9 +1340,9 @@
             }).map(st => st.station.replace(', Ipoh', ''));
 
             var colorMap = {
-                '2018': '#0F4C81', /* Biru gelab */
-                '2020': '#2E7DAD', /* Biru sederhana */
-                '2023': '#16A34A'  /* Hijau */
+                '2018': '#0F4C81',
+                '2020': '#2E7DAD',
+                '2023': '#16A34A'
             };
 
             var datasetsCombined = [];
@@ -1416,7 +1415,7 @@
                 binaGrafPurataSidebar(paramSemasa);
             }, 150);
         }
-        /* 3. PDF GRAF TAHUNAN (WARNA DITUKAR KEPADA: 2018=#0F4C81, 2020=#2E7DAD, 2023=#16A34A) */
+        /* 3. PDF GRAF TAHUNAN - TAJUK PARAMETER PENUH (Nitrogen Dioksida, Karbon Monoksida, IPU / API) */
         else if (pdfMode === 'yearly_chart') {
             document.getElementById('pdf-avg-chart-box').style.display = 'none';
 
@@ -1424,23 +1423,27 @@
             gridBox.className = 'pdf-map-column';
             gridBox.style.width = '100%';
 
+            var titleNo2 = bahasaSemasa === 'ms' ? 'Nitrogen Dioksida (NO₂)' : 'Nitrogen Dioxide (NO₂)';
+            var titleCo = bahasaSemasa === 'ms' ? 'Karbon Monoksida (CO)' : 'Carbon Monoxide (CO)';
+            var titleIpu = bahasaSemasa === 'ms' ? 'Indeks Pencemar Udara (IPU)' : 'Air Pollutant Index (API)';
+
             gridBox.innerHTML = `
                 <div class="pdf-map-header">${dict['yearly_param_comparison']}</div>
                 <div class="yearly-param-grid">
                     <div class="yearly-param-card">
-                        <div class="yearly-card-title">NO₂</div>
+                        <div class="yearly-card-title">${titleNo2}</div>
                         <div style="flex:1; width:100%; position:relative;">
                             <canvas id="chartYearlyNO2"></canvas>
                         </div>
                     </div>
                     <div class="yearly-param-card">
-                        <div class="yearly-card-title">CO</div>
+                        <div class="yearly-card-title">${titleCo}</div>
                         <div style="flex:1; width:100%; position:relative;">
                             <canvas id="chartYearlyCO"></canvas>
                         </div>
                     </div>
                     <div class="yearly-param-card">
-                        <div class="yearly-card-title">${ipuLabelText}</div>
+                        <div class="yearly-card-title">${titleIpu}</div>
                         <div style="flex:1; width:100%; position:relative;">
                             <canvas id="chartYearlyIPU"></canvas>
                         </div>
@@ -1474,7 +1477,6 @@
                                 datasets: [{
                                     label: `Purata ${p.code}`,
                                     data: [val18, val20, val23],
-                                    /* WARNA DITUKAR SAMA SEPERTI GAMBAR DIBERI */
                                     backgroundColor: ['#0F4C81', '#2E7DAD', '#16A34A'],
                                     borderRadius: 4,
                                     barThickness: 28
