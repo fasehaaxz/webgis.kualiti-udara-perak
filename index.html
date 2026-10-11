@@ -168,7 +168,13 @@
         gap: 10px; 
         z-index: 1050; 
         overflow-y: auto;
-        transition: transform 0.3s ease, margin-left 0.3s ease;
+        transition: margin-left 0.3s ease, transform 0.3s ease;
+        margin-left: 0;
+    }
+
+    /* KELAS COLLAPSED UNTUK DESKTOP */
+    .left-panel.collapsed {
+        margin-left: -290px;
     }
 
     .custom-side-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); }
@@ -313,11 +319,12 @@
             bottom: 0;
             height: calc(100vh - 58px);
             box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            margin-left: 0;
             transform: translateX(0);
         }
         .left-panel.collapsed {
-            transform: translateX(-100%);
             margin-left: 0;
+            transform: translateX(-100%);
         }
 
         .grid-2, .grid-3 {
@@ -425,7 +432,7 @@
         <div class="main-workspace">
             
             <!-- PANEL TETAPAN KIRI -->
-            <div class="left-panel collapsed" id="left-panel">
+            <div class="left-panel" id="left-panel">
                 
                 <div class="custom-side-card">
                     <div class="card-title-group">
@@ -438,7 +445,7 @@
                         <label class="custom-form-label" data-i18n="parameter">Parameter</label>
                         <select class="custom-select-box" id="side-select-param" onchange="tukarParameter(this.value)">
                             <option value="CO" id="opt-co-param" selected>Karbon Monoksida (CO)</option>
-                            <option value="NO2" id="opt-no2-param">Nitrogen Dioksida (NO2)</option>
+                            <option value="NO2" id="opt-no2-param">Nitrogen Dioksida (NO₂)</option>
                             <option value="IPU" id="opt-ipu-param">Indeks Pencemar Udara (IPU)</option>
                         </select>
                     </div>
@@ -634,7 +641,7 @@
             "display_settings": "Tetapan Utama",
             "parameter": "Parameter",
             "param_co_label": "Karbon Monoksida (CO)",
-            "param_no2_label": "Nitrogen Dioksida (NO2)",
+            "param_no2_label": "Nitrogen Dioksida (NO₂)",
             "param_ipu_label": "Indeks Pencemar Udara (IPU)",
             "display_mode": "Mod Paparan",
             "mode_single": "Satu Tahun",
@@ -683,7 +690,7 @@
             "display_settings": "Main Settings",
             "parameter": "Parameter",
             "param_co_label": "Carbon Monoxide (CO)",
-            "param_no2_label": "Nitrogen Dioxide (NO2)",
+            "param_no2_label": "Nitrogen Dioxide (NO₂)",
             "param_ipu_label": "Air Pollutant Index (API)",
             "display_mode": "Display Mode",
             "mode_single": "Single Year",
@@ -813,9 +820,13 @@
     function toggleSidebar() {
         var side = document.getElementById('left-panel');
         var btn = document.getElementById('btn-toggle-sidebar');
+        
         side.classList.toggle('collapsed');
         btn.classList.toggle('active-toggle');
-        setTimeout(() => mapInstances.forEach(m => m.invalidateSize()), 300);
+        
+        setTimeout(() => {
+            mapInstances.forEach(m => m.invalidateSize());
+        }, 320);
     }
 
     function dapatkanWarna(val, param) {
@@ -1415,7 +1426,7 @@
                 binaGrafPurataSidebar(paramSemasa);
             }, 150);
         }
-        /* 3. PDF GRAF TAHUNAN - TAJUK PARAMETER PENUH (Nitrogen Dioksida, Karbon Monoksida, IPU / API) */
+        /* 3. PDF GRAF TAHUNAN */
         else if (pdfMode === 'yearly_chart') {
             document.getElementById('pdf-avg-chart-box').style.display = 'none';
 
